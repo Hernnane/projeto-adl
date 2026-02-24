@@ -8,15 +8,8 @@ import { Modal } from '@/components/ui/Modal';
 import { toast } from '@/components/ui/Toast';
 import { Plus, Edit, Layers, Users, Building2 } from 'lucide-react';
 
-const setores = [
-    { id: '1', nome: 'Manutenção', descricao: 'Manutenção preventiva e corretiva de equipamentos industriais', status: 'ATIVO', filiais: ['Fábrica RJ'], usuarios: 12 },
-    { id: '2', nome: 'Operações', descricao: 'Operação de equipamentos de mineração e processamento', status: 'ATIVO', filiais: ['Fábrica RJ', 'Pesquisa BA'], usuarios: 18 },
-    { id: '3', nome: 'Laboratório', descricao: 'Análise química e física de amostras minerais', status: 'ATIVO', filiais: ['Pesquisa BA'], usuarios: 6 },
-    { id: '4', nome: 'Administrativo', descricao: 'Gestão financeira, contábil e recursos humanos', status: 'ATIVO', filiais: ['Matriz SP'], usuarios: 8 },
-    { id: '5', nome: 'Logística', descricao: 'Transporte, armazenamento e distribuição de materiais', status: 'ATIVO', filiais: ['Fábrica RJ', 'Matriz SP'], usuarios: 5 },
-    { id: '6', nome: 'Compras', descricao: 'Cotação, negociação e aquisição de materiais e serviços', status: 'ATIVO', filiais: ['Matriz SP'], usuarios: 3 },
-    { id: '7', nome: 'Segurança do Trabalho', descricao: 'NR/ISO, EPIs, treinamentos de segurança', status: 'ATIVO', filiais: ['Fábrica RJ', 'Pesquisa BA'], usuarios: 4 },
-];
+// TODO: Buscar setores do Supabase
+const setores: { id: string; nome: string; descricao: string; status: string; filiais: string[]; usuarios: number }[] = [];
 
 export default function SetoresPage() {
     const [showModal, setShowModal] = useState(false);

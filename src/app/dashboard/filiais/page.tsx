@@ -8,11 +8,8 @@ import { Modal } from '@/components/ui/Modal';
 import { toast } from '@/components/ui/Toast';
 import { Building2, MapPin, Users, Plus, Edit, FileText } from 'lucide-react';
 
-const filiais = [
-    { id: '1', nome: 'Matriz ADL Group', cidade: 'São Paulo', estado: 'SP', cnpj: '12.345.678/0001-00', ie: '123.456.789.000', responsavel: 'Gabriel Administrador', status: 'ATIVO', usuarios: 15, cep: '01310-100', endereco: 'Av. Paulista, 1500' },
-    { id: '2', nome: 'Fábrica de Processamento', cidade: 'Rio de Janeiro', estado: 'RJ', cnpj: '12.345.678/0002-81', ie: '987.654.321.000', responsavel: 'Carlos Eduardo Gerente', status: 'ATIVO', usuarios: 32, cep: '20040-020', endereco: 'Rua Industrial, 450' },
-    { id: '3', nome: 'Centro de Pesquisa', cidade: 'Salvador', estado: 'BA', cnpj: '12.345.678/0003-62', ie: '456.789.123.000', responsavel: 'Maria Luísa Oliveira', status: 'ATIVO', usuarios: 8, cep: '40140-130', endereco: 'Av. Tancredo Neves, 1200' },
-];
+// TODO: Buscar filiais do Supabase
+const filiais: { id: string; nome: string; cidade: string; estado: string; cnpj: string; ie: string; responsavel: string; status: string; usuarios: number; cep: string; endereco: string }[] = [];
 
 export default function FiliaisPage() {
     const [showModal, setShowModal] = useState(false);

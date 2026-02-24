@@ -72,12 +72,8 @@ export function Header({ userName = 'Usuário', notificationCount = 0 }: HeaderP
         isLast: i === segments.length - 1,
     }));
 
-    // Dummy notifications for demo
-    const notifications = [
-        { id: '1', title: 'Nova requisição #REQ-2026-00012', message: 'João Silva criou uma requisição urgente', time: new Date(Date.now() - 3600000).toISOString(), urgente: true },
-        { id: '2', title: 'Requisição aprovada', message: 'Gerente aprovou REQ-2026-00010', time: new Date(Date.now() - 7200000).toISOString(), urgente: false },
-        { id: '3', title: 'Novo usuário cadastrado', message: 'Maria Oliveira foi adicionada ao sistema', time: new Date(Date.now() - 86400000).toISOString(), urgente: false },
-    ];
+    // TODO: Buscar notificações do Supabase
+    const notifications: { id: string; title: string; message: string; time: string; urgente: boolean }[] = [];
 
     return (
         <header className="h-16 bg-white border-b border-[hsl(220,15%,90%)] flex items-center justify-between px-4 lg:px-6 flex-shrink-0 sticky top-0 z-30">

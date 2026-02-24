@@ -10,15 +10,8 @@ import { Perfil, PERFIL_LABEL, StatusUsuario } from '@/types';
 import { getInitials } from '@/lib/utils';
 import { Plus, Search, MoreVertical, Mail, Shield, Building2, Edit, Power } from 'lucide-react';
 
-const usuarios = [
-    { id: '1', nome: 'Gabriel Administrador', email: 'gabriel@adlgroup.com.br', perfil: Perfil.MASTER, filial: 'Matriz SP', cargo: 'CEO', status: StatusUsuario.ATIVO },
-    { id: '2', nome: 'Ana Carolina Costa', email: 'ana.costa@adlgroup.com.br', perfil: Perfil.ADMINISTRADOR, filial: 'Matriz SP', cargo: 'Coord. Administrativo', status: StatusUsuario.ATIVO },
-    { id: '3', nome: 'Carlos Eduardo Gerente', email: 'carlos.gerente@adlgroup.com.br', perfil: Perfil.GERENTE_LOCAL, filial: 'Fábrica RJ', cargo: 'Gerente de Produção', status: StatusUsuario.ATIVO },
-    { id: '4', nome: 'João Pedro Silva', email: 'joao.silva@adlgroup.com.br', perfil: Perfil.OPERACIONAL, filial: 'Fábrica RJ', cargo: 'Operador de Máquinas', status: StatusUsuario.ATIVO },
-    { id: '5', nome: 'Maria Luísa Oliveira', email: 'maria.oliveira@adlgroup.com.br', perfil: Perfil.GERENTE_LOCAL, filial: 'Pesquisa BA', cargo: 'Coord. de Pesquisa', status: StatusUsuario.ATIVO },
-    { id: '6', nome: 'Pedro Henrique Lima', email: 'pedro.lima@adlgroup.com.br', perfil: Perfil.OPERACIONAL, filial: 'Fábrica RJ', cargo: 'Técnico de Manutenção', status: StatusUsuario.INATIVO },
-    { id: '7', nome: 'Fernanda Souza', email: 'fernanda@adlgroup.com.br', perfil: Perfil.OPERACIONAL, filial: 'Pesquisa BA', cargo: 'Pesquisadora', status: StatusUsuario.PENDENTE },
-];
+// TODO: Buscar usuários do Supabase
+const usuarios: { id: string; nome: string; email: string; perfil: Perfil; filial: string; cargo: string; status: StatusUsuario }[] = [];
 
 const perfilColors: Record<Perfil, string> = {
     [Perfil.MASTER]: 'gold',
@@ -89,8 +82,8 @@ export default function UsuariosPage() {
                     <div key={user.id} className="bg-white rounded-xl border border-[hsl(220,15%,92%)] p-5 hover:shadow-md transition-all hover:-translate-y-0.5 group">
                         <div className="flex items-start gap-4">
                             <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 ${user.perfil === Perfil.MASTER
-                                    ? 'bg-gradient-to-br from-[hsl(42,85%,55%)] to-[hsl(42,80%,45%)] text-[hsl(210,80%,14%)]'
-                                    : 'bg-gradient-to-br from-[hsl(210,70%,32%)] to-[hsl(210,80%,22%)] text-white'
+                                ? 'bg-gradient-to-br from-[hsl(42,85%,55%)] to-[hsl(42,80%,45%)] text-[hsl(210,80%,14%)]'
+                                : 'bg-gradient-to-br from-[hsl(210,70%,32%)] to-[hsl(210,80%,22%)] text-white'
                                 }`}>
                                 {getInitials(user.nome)}
                             </div>

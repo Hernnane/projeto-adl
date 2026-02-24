@@ -20,16 +20,8 @@ import {
     X,
 } from 'lucide-react';
 
-// Demo data
-const requisicoes = [
-    { id: 'REQ-2026-00042', descricao: 'Peças de reposição para britador primário', solicitante: 'João Silva', filial: 'Fábrica RJ', setor: 'Manutenção', prioridade: Prioridade.EMERGENCIA, status: StatusRequisicao.AGUARDANDO_CEO, valor: 8500, itens: 3, criadoEm: new Date(Date.now() - 3600000).toISOString() },
-    { id: 'REQ-2026-00041', descricao: 'EPIs para equipe de campo - luvas, capacetes e botas', solicitante: 'Maria Oliveira', filial: 'Pesquisa BA', setor: 'Operações', prioridade: Prioridade.URGENTE, status: StatusRequisicao.AGUARDANDO_ADM, valor: 2300, itens: 5, criadoEm: new Date(Date.now() - 7200000).toISOString() },
-    { id: 'REQ-2026-00040', descricao: 'Material de escritório para o trimestre', solicitante: 'Carlos Santos', filial: 'Matriz SP', setor: 'Administrativo', prioridade: Prioridade.NORMAL, status: StatusRequisicao.AGUARDANDO_GERENTE, valor: 450, itens: 8, criadoEm: new Date(Date.now() - 14400000).toISOString() },
-    { id: 'REQ-2026-00039', descricao: 'Reagentes químicos para análise de Monazita', solicitante: 'Ana Costa', filial: 'Pesquisa BA', setor: 'Laboratório', prioridade: Prioridade.URGENTE, status: StatusRequisicao.APROVADO_FINAL, valor: 12800, itens: 4, criadoEm: new Date(Date.now() - 86400000).toISOString() },
-    { id: 'REQ-2026-00038', descricao: 'Manutenção preventiva separador magnético', solicitante: 'Pedro Lima', filial: 'Fábrica RJ', setor: 'Manutenção', prioridade: Prioridade.NORMAL, status: StatusRequisicao.REPROVADO_FINAL, valor: 3200, itens: 2, criadoEm: new Date(Date.now() - 172800000).toISOString() },
-    { id: 'REQ-2026-00037', descricao: 'Combustível e lubrificantes para frota', solicitante: 'Lucas Ferreira', filial: 'Fábrica RJ', setor: 'Logística', prioridade: Prioridade.NORMAL, status: StatusRequisicao.RASCUNHO, valor: 0, itens: 3, criadoEm: new Date(Date.now() - 259200000).toISOString() },
-    { id: 'REQ-2026-00036', descricao: 'Equipamento de medição granulométrica', solicitante: 'Fernanda Souza', filial: 'Pesquisa BA', setor: 'Laboratório', prioridade: Prioridade.URGENTE, status: StatusRequisicao.RETORNO_SOLICITANTE, valor: 15600, itens: 1, criadoEm: new Date(Date.now() - 345600000).toISOString() },
-];
+// TODO: Buscar requisições do Supabase
+const requisicoes: { id: string; descricao: string; solicitante: string; filial: string; setor: string; prioridade: Prioridade; status: StatusRequisicao; valor: number; itens: number; criadoEm: string }[] = [];
 
 export default function RequisicaoListPage() {
     const router = useRouter();
