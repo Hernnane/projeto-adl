@@ -23,6 +23,44 @@ export default function LoginPage() {
         { email: 'operador@adl.com', password: 'Adl@2026', nome: 'João Operador', perfil: 'Operacional', cor: 'from-[hsl(220,15%,55%)] to-[hsl(220,15%,42%)]', textCor: 'text-white' },
     ];
 
+    const supabaseLogin = async (loginEmail: string, loginPassword: string) => {
+        const { createSupabaseBrowser } = await import('@/lib/supabase/browser');
+        const supabase = createSupabaseBrowser();
+
+        // Tentar login
+        const { error } = await supabase.auth.signInWithPassword({
+            email: loginEmail,
+            password: loginPassword,
+        });
+
+        if (error) {
+            // Se o usuário não existe, tenta criar (modo demo)
+            if (error.message.includes('Invalid login') || error.message.includes('invalid_credentials')) {
+                const { error: signUpError } = await supabase.auth.signUp({
+                    email: loginEmail,
+                    password: loginPassword,
+                    options: { data: { nome: loginEmail.split('@')[0] } },
+                });
+
+                if (signUpError) {
+                    throw new Error(signUpError.message);
+                }
+
+                // Tenta login novamente após criar
+                const { error: retryError } = await supabase.auth.signInWithPassword({
+                    email: loginEmail,
+                    password: loginPassword,
+                });
+
+                if (retryError) {
+                    throw new Error('Conta criada, mas o login falhou. Verifique se a confirmação de email está desativada no Supabase.');
+                }
+            } else {
+                throw error;
+            }
+        }
+    };
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -33,41 +71,32 @@ export default function LoginPage() {
 
         setLoading(true);
 
-        // Verificar credenciais demo
-        const account = demoAccounts.find(a => a.email === email);
-
-        setTimeout(() => {
-            if (account && password === account.password) {
-                localStorage.setItem('sca_demo_user', JSON.stringify({
-                    nome: account.nome,
-                    email: account.email,
-                    perfil: account.perfil,
-                }));
-                toast.success(`Bem-vindo, ${account.nome}!`);
-                window.location.href = '/dashboard';
-            } else if (account && password !== account.password) {
-                setLoading(false);
-                toast.error('Senha incorreta', 'Use: Adl@2026');
-            } else {
-                setLoading(false);
-                toast.error('Credenciais inválidas', 'Use uma das contas demo abaixo');
-            }
-        }, 800);
+        try {
+            await supabaseLogin(email, password);
+            const account = demoAccounts.find(a => a.email === email);
+            toast.success(`Bem-vindo${account ? ', ' + account.nome : ''}!`);
+            window.location.href = '/dashboard';
+        } catch (err: unknown) {
+            setLoading(false);
+            const message = err instanceof Error ? err.message : 'Erro ao fazer login';
+            toast.error('Falha no login', message);
+        }
     };
 
-    const quickLogin = (account: typeof demoAccounts[0]) => {
+    const quickLogin = async (account: typeof demoAccounts[0]) => {
         setEmail(account.email);
         setPassword(account.password);
         setLoading(true);
-        localStorage.setItem('sca_demo_user', JSON.stringify({
-            nome: account.nome,
-            email: account.email,
-            perfil: account.perfil,
-        }));
-        setTimeout(() => {
+
+        try {
+            await supabaseLogin(account.email, account.password);
             toast.success(`Bem-vindo, ${account.nome}!`);
             window.location.href = '/dashboard';
-        }, 600);
+        } catch (err: unknown) {
+            setLoading(false);
+            const message = err instanceof Error ? err.message : 'Erro ao fazer login';
+            toast.error('Falha no login', message);
+        }
     };
 
     return (
