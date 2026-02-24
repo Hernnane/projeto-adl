@@ -15,6 +15,14 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    // Contas demo para teste
+    const demoAccounts = [
+        { email: 'ceo@adl.com', password: 'Adl@2026', nome: 'Gabriel CEO', perfil: 'Master / CEO', cor: 'from-[hsl(42,85%,55%)] to-[hsl(42,80%,45%)]', textCor: 'text-[hsl(210,80%,14%)]' },
+        { email: 'admin@adl.com', password: 'Adl@2026', nome: 'Ana Admin', perfil: 'Administrador', cor: 'from-[hsl(210,80%,35%)] to-[hsl(210,80%,22%)]', textCor: 'text-white' },
+        { email: 'gerente@adl.com', password: 'Adl@2026', nome: 'Carlos Gerente', perfil: 'Gerente Local', cor: 'from-[hsl(152,60%,40%)] to-[hsl(152,55%,32%)]', textCor: 'text-white' },
+        { email: 'operador@adl.com', password: 'Adl@2026', nome: 'João Operador', perfil: 'Operacional', cor: 'from-[hsl(220,15%,55%)] to-[hsl(220,15%,42%)]', textCor: 'text-white' },
+    ];
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -25,12 +33,41 @@ export default function LoginPage() {
 
         setLoading(true);
 
-        // Demo: simulate login
+        // Verificar credenciais demo
+        const account = demoAccounts.find(a => a.email === email);
+
         setTimeout(() => {
-            setLoading(false);
-            toast.success('Login realizado com sucesso!');
+            if (account && password === account.password) {
+                localStorage.setItem('sca_demo_user', JSON.stringify({
+                    nome: account.nome,
+                    email: account.email,
+                    perfil: account.perfil,
+                }));
+                toast.success(`Bem-vindo, ${account.nome}!`);
+                router.push('/dashboard');
+            } else if (account && password !== account.password) {
+                setLoading(false);
+                toast.error('Senha incorreta', 'Use: Adl@2026');
+            } else {
+                setLoading(false);
+                toast.error('Credenciais inválidas', 'Use uma das contas demo abaixo');
+            }
+        }, 800);
+    };
+
+    const quickLogin = (account: typeof demoAccounts[0]) => {
+        setEmail(account.email);
+        setPassword(account.password);
+        setLoading(true);
+        localStorage.setItem('sca_demo_user', JSON.stringify({
+            nome: account.nome,
+            email: account.email,
+            perfil: account.perfil,
+        }));
+        setTimeout(() => {
+            toast.success(`Bem-vindo, ${account.nome}!`);
             router.push('/dashboard');
-        }, 1500);
+        }, 600);
     };
 
     return (
@@ -94,7 +131,7 @@ export default function LoginPage() {
             </div>
 
             {/* Right side - Login form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-[hsl(220,20%,97%)]">
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-[hsl(220,20%,97%)] overflow-y-auto">
                 <div className="w-full max-w-md">
                     {/* Mobile logo */}
                     <div className="lg:hidden flex items-center gap-3 mb-10 justify-center">
@@ -160,16 +197,27 @@ export default function LoginPage() {
                             </Button>
                         </form>
 
-                        <div className="mt-6 pt-6 border-t border-[hsl(220,15%,92%)] text-center">
-                            <p className="text-xs text-[hsl(220,10%,55%)]">
-                                Primeiro acesso?{' '}
-                                <Link
-                                    href="/primeiro-acesso"
-                                    className="font-medium text-[hsl(210,80%,35%)] hover:text-[hsl(210,80%,25%)]"
-                                >
-                                    Ativar minha conta
-                                </Link>
-                            </p>
+                        {/* Quick Demo Access */}
+                        <div className="mt-6 pt-6 border-t border-[hsl(220,15%,92%)]">
+                            <p className="text-xs text-[hsl(220,10%,55%)] mb-3 text-center font-medium">⚡ Acesso rápido demo</p>
+                            <div className="grid grid-cols-2 gap-2">
+                                {demoAccounts.map((account) => (
+                                    <button
+                                        key={account.email}
+                                        onClick={() => quickLogin(account)}
+                                        className="flex items-center gap-2 p-2.5 rounded-lg border border-[hsl(220,15%,90%)] hover:border-[hsl(210,80%,50%)] hover:shadow-sm transition-all text-left group"
+                                    >
+                                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${account.cor} flex items-center justify-center text-[10px] font-bold ${account.textCor} flex-shrink-0`}>
+                                            {account.nome.split(' ').map(n => n[0]).join('')}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="text-xs font-medium text-[hsl(220,25%,10%)] truncate">{account.nome}</p>
+                                            <p className="text-[10px] text-[hsl(220,10%,50%)]">{account.perfil}</p>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                            <p className="text-[10px] text-[hsl(220,10%,60%)] mt-2 text-center">Senha: <code className="bg-[hsl(220,15%,95%)] px-1.5 py-0.5 rounded text-[hsl(210,80%,35%)] font-mono">Adl@2026</code></p>
                         </div>
                     </div>
 
