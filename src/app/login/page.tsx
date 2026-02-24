@@ -44,7 +44,7 @@ export default function LoginPage() {
                     perfil: account.perfil,
                 }));
                 toast.success(`Bem-vindo, ${account.nome}!`);
-                router.push('/dashboard');
+                window.location.href = '/dashboard';
             } else if (account && password !== account.password) {
                 setLoading(false);
                 toast.error('Senha incorreta', 'Use: Adl@2026');
@@ -66,7 +66,7 @@ export default function LoginPage() {
         }));
         setTimeout(() => {
             toast.success(`Bem-vindo, ${account.nome}!`);
-            router.push('/dashboard');
+            window.location.href = '/dashboard';
         }, 600);
     };
 
