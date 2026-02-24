@@ -7,59 +7,11 @@ import { toast } from '@/components/ui/Toast';
 import { ToastContainer } from '@/components/ui/Toast';
 import { Mail, Lock, Gem } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
-    const router = useRouter();
-
-    // Contas demo para teste
-    const demoAccounts = [
-        { email: 'ceo@adl.com', password: 'Adl@2026', nome: 'Gabriel CEO', perfil: 'Master / CEO', cor: 'from-[hsl(42,85%,55%)] to-[hsl(42,80%,45%)]', textCor: 'text-[hsl(210,80%,14%)]' },
-        { email: 'admin@adl.com', password: 'Adl@2026', nome: 'Ana Admin', perfil: 'Administrador', cor: 'from-[hsl(210,80%,35%)] to-[hsl(210,80%,22%)]', textCor: 'text-white' },
-        { email: 'gerente@adl.com', password: 'Adl@2026', nome: 'Carlos Gerente', perfil: 'Gerente Local', cor: 'from-[hsl(152,60%,40%)] to-[hsl(152,55%,32%)]', textCor: 'text-white' },
-        { email: 'operador@adl.com', password: 'Adl@2026', nome: 'João Operador', perfil: 'Operacional', cor: 'from-[hsl(220,15%,55%)] to-[hsl(220,15%,42%)]', textCor: 'text-white' },
-    ];
-
-    const supabaseLogin = async (loginEmail: string, loginPassword: string) => {
-        const { createSupabaseBrowser } = await import('@/lib/supabase/browser');
-        const supabase = createSupabaseBrowser();
-
-        // Tentar login
-        const { error } = await supabase.auth.signInWithPassword({
-            email: loginEmail,
-            password: loginPassword,
-        });
-
-        if (error) {
-            // Se o usuário não existe, tenta criar (modo demo)
-            if (error.message.includes('Invalid login') || error.message.includes('invalid_credentials')) {
-                const { error: signUpError } = await supabase.auth.signUp({
-                    email: loginEmail,
-                    password: loginPassword,
-                    options: { data: { nome: loginEmail.split('@')[0] } },
-                });
-
-                if (signUpError) {
-                    throw new Error(signUpError.message);
-                }
-
-                // Tenta login novamente após criar
-                const { error: retryError } = await supabase.auth.signInWithPassword({
-                    email: loginEmail,
-                    password: loginPassword,
-                });
-
-                if (retryError) {
-                    throw new Error('Conta criada, mas o login falhou. Verifique se a confirmação de email está desativada no Supabase.');
-                }
-            } else {
-                throw error;
-            }
-        }
-    };
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -72,25 +24,19 @@ export default function LoginPage() {
         setLoading(true);
 
         try {
-            await supabaseLogin(email, password);
-            const account = demoAccounts.find(a => a.email === email);
-            toast.success(`Bem-vindo${account ? ', ' + account.nome : ''}!`);
-            window.location.href = '/dashboard';
-        } catch (err: unknown) {
-            setLoading(false);
-            const message = err instanceof Error ? err.message : 'Erro ao fazer login';
-            toast.error('Falha no login', message);
-        }
-    };
+            const { createSupabaseBrowser } = await import('@/lib/supabase/browser');
+            const supabase = createSupabaseBrowser();
 
-    const quickLogin = async (account: typeof demoAccounts[0]) => {
-        setEmail(account.email);
-        setPassword(account.password);
-        setLoading(true);
+            const { error } = await supabase.auth.signInWithPassword({
+                email,
+                password,
+            });
 
-        try {
-            await supabaseLogin(account.email, account.password);
-            toast.success(`Bem-vindo, ${account.nome}!`);
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            toast.success('Login realizado com sucesso!');
             window.location.href = '/dashboard';
         } catch (err: unknown) {
             setLoading(false);
@@ -160,7 +106,7 @@ export default function LoginPage() {
             </div>
 
             {/* Right side - Login form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-[hsl(220,20%,97%)] overflow-y-auto">
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 bg-[hsl(220,20%,97%)]">
                 <div className="w-full max-w-md">
                     {/* Mobile logo */}
                     <div className="lg:hidden flex items-center gap-3 mb-10 justify-center">
@@ -226,27 +172,16 @@ export default function LoginPage() {
                             </Button>
                         </form>
 
-                        {/* Quick Demo Access */}
-                        <div className="mt-6 pt-6 border-t border-[hsl(220,15%,92%)]">
-                            <p className="text-xs text-[hsl(220,10%,55%)] mb-3 text-center font-medium">⚡ Acesso rápido demo</p>
-                            <div className="grid grid-cols-2 gap-2">
-                                {demoAccounts.map((account) => (
-                                    <button
-                                        key={account.email}
-                                        onClick={() => quickLogin(account)}
-                                        className="flex items-center gap-2 p-2.5 rounded-lg border border-[hsl(220,15%,90%)] hover:border-[hsl(210,80%,50%)] hover:shadow-sm transition-all text-left group"
-                                    >
-                                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${account.cor} flex items-center justify-center text-[10px] font-bold ${account.textCor} flex-shrink-0`}>
-                                            {account.nome.split(' ').map(n => n[0]).join('')}
-                                        </div>
-                                        <div className="min-w-0">
-                                            <p className="text-xs font-medium text-[hsl(220,25%,10%)] truncate">{account.nome}</p>
-                                            <p className="text-[10px] text-[hsl(220,10%,50%)]">{account.perfil}</p>
-                                        </div>
-                                    </button>
-                                ))}
-                            </div>
-                            <p className="text-[10px] text-[hsl(220,10%,60%)] mt-2 text-center">Senha: <code className="bg-[hsl(220,15%,95%)] px-1.5 py-0.5 rounded text-[hsl(210,80%,35%)] font-mono">Adl@2026</code></p>
+                        <div className="mt-6 pt-6 border-t border-[hsl(220,15%,92%)] text-center">
+                            <p className="text-xs text-[hsl(220,10%,55%)]">
+                                Primeiro acesso?{' '}
+                                <Link
+                                    href="/primeiro-acesso"
+                                    className="font-medium text-[hsl(210,80%,35%)] hover:text-[hsl(210,80%,25%)]"
+                                >
+                                    Ativar minha conta
+                                </Link>
+                            </p>
                         </div>
                     </div>
 
