@@ -236,6 +236,12 @@ export function Header({ userName = 'Usuário', notificationCount = 0 }: HeaderP
                                     Configurações
                                 </Link>
                                 <button
+                                    onClick={async () => {
+                                        const { createSupabaseBrowser } = await import('@/lib/supabase/browser');
+                                        const supabase = createSupabaseBrowser();
+                                        await supabase.auth.signOut();
+                                        window.location.href = '/login';
+                                    }}
                                     className="flex items-center gap-2.5 px-3 py-2 text-sm text-[hsl(0,72%,45%)] rounded-lg hover:bg-[hsl(0,70%,97%)] transition-colors w-full"
                                 >
                                     <LogOut size={16} />
